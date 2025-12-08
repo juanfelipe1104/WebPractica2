@@ -2,30 +2,17 @@ import { getAccessToken, refreshAccessToken } from "./auth";
 
 export async function generatePlaylist(preferences) {
 	const { artists, genres, decades, popularity } = preferences;
-	const token = getAccessToken();
 	let allTracks = [];
-
+	
 	// 1. Obtener top tracks de artistas seleccionados
 	for (const artist of artists) {
-		const tracks = await fetch(
-			`https://api.spotify.com/v1/artists/${artist.id}/top-tracks?market=US`,
-			{
-				headers: { 'Authorization': `Bearer ${token}` }
-			}
-		);
-		const data = await tracks.json();
+		const data = await spotifyRequest(`https://api.spotify.com/v1/artists/${artist.id}/top-tracks?market=US`);
 		allTracks.push(...data.tracks);
 	}
 
 	// 2. Buscar por géneros
 	for (const genre of genres) {
-		const results = await fetch(
-			`https://api.spotify.com/v1/search?type=track&q=genre:${genre}&limit=20`,
-			{
-				headers: { 'Authorization': `Bearer ${token}` }
-			}
-		);
-		const data = await results.json();
+		const data = await spotifyRequest(`https://api.spotify.com/v1/search?type=track&q=genre:${genre}&limit=20`);
 		allTracks.push(...data.tracks.items);
 	}
 
@@ -53,7 +40,14 @@ export async function generatePlaylist(preferences) {
 		new Map(allTracks.map(track => [track.id, track])).values()
 	).slice(0, 30);
 
-	return uniqueTracks;
+	return uniqueTracks.map((track) => ({
+		id: track.id,
+		name: track.name,
+		artists: track.artists.map((a) => a.name).join(", "),
+		album: track.album.name,
+		image: track.album.images?.[0]?.url || null,
+		preview_url: track.preview_url,
+	}));
 }
 
 export async function spotifyRequest(url, options = {}) {
