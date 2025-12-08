@@ -86,7 +86,6 @@ export default function ArtistWidget({ selectedArtists, onChange }) {
                 {results.map((artist) => (
                     <button
                         key={artist.id}
-                        type="button"
                         onClick={() => toggleArtist(artist)}
                         className={`px-3 py-1 rounded-full text-sm border flex items-center gap-2 transition
                             ${isSelected(artist)
