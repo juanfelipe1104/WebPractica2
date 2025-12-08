@@ -1,9 +1,12 @@
 import { getAccessToken, refreshAccessToken } from "./auth";
 
 export async function generatePlaylist(preferences) {
-	const { artists, genres, decades, popularity } = preferences;
+	const { artists, tracks, genres, decades, popularity } = preferences;
 	let allTracks = [];
-	
+
+	//0. Incluir tracks seleccionadas directamente
+	allTracks.push(...tracks);
+
 	// 1. Obtener top tracks de artistas seleccionados
 	for (const artist of artists) {
 		const data = await spotifyRequest(`https://api.spotify.com/v1/artists/${artist.id}/top-tracks?market=US`);
@@ -35,19 +38,33 @@ export async function generatePlaylist(preferences) {
 		);
 	}
 
+	const simplified = allTracks.map((track) => {
+		let artistsStr;
+		if (Array.isArray(track.artists)) {
+			artistsStr = track.artists.map((a) => a.name).join(", ");
+		} else {
+			artistsStr = track.artists ?? "";
+		}
+		const albumName = typeof track.album === "string" ? track.album : track.album?.name;
+
+		const imageUrl = track.image ?? track.album?.images?.[0]?.url ?? null;
+
+		return {
+			id: track.id,
+			name: track.name,
+			artists: artistsStr,
+			album: albumName,
+			image: imageUrl,
+			preview_url: track.preview_url,
+		};
+	});
+
 	// 5. Eliminar duplicados y limitar a 30 canciones
 	const uniqueTracks = Array.from(
-		new Map(allTracks.map(track => [track.id, track])).values()
+		new Map(simplified.map(track => [track.id, track])).values()
 	).slice(0, 30);
 
-	return uniqueTracks.map((track) => ({
-		id: track.id,
-		name: track.name,
-		artists: track.artists.map((a) => a.name).join(", "),
-		album: track.album.name,
-		image: track.album.images?.[0]?.url || null,
-		preview_url: track.preview_url,
-	}));
+	return uniqueTracks
 }
 
 export async function spotifyRequest(url, options = {}) {

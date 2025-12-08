@@ -107,7 +107,7 @@ export default function ArtistWidget({ selectedArtists, onChange }) {
 
                 {!loading && !error && query && results.length === 0 && (
                     <p className="text-xs text-gray-500">
-                        No se encontraron artistas para “{query}”.
+                        No se encontraron artistas para "{query}".
                     </p>
                 )}
             </div>
