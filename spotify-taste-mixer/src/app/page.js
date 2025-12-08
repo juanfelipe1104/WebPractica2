@@ -19,9 +19,11 @@ export default function Home() {
 	};
 
 	return (
-		<>
-			<h1>🎵 Spotify Taste Mixer</h1>
-			<button onClick={handleLogin}>Login</button>
-		</>
+		<main className="min-h-screen flex flex-col items-center justify-center gap-4">
+			<h1 className="text-2xl font-semibold">Spotify Taste Mixer</h1>
+			<button onClick={handleLogin} className="px-4 py-2 rounded-md border text-lg">
+				Login con Spotify
+			</button>
+		</main>
 	);
 }
