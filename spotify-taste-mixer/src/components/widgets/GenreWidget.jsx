@@ -20,7 +20,7 @@ const GENRES = [
     "r&b",
     "classical",
     "soundtrack",
-    "lo-fi",
+    "lo-fi"
 ];
 
 export default function GenreWidget({ selectedGenres, onChange }) {
