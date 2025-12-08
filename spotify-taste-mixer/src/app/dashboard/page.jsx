@@ -1,70 +1,49 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { spotifyRequest } from "@/lib/spotify";
 import Header from "@/components/Header";
-import ArtistWidget from "@/components/widgets/ArtistWidget";
+import { usePreferences } from "@/hooks/usePreferences";
+import { usePlaylist } from "@/hooks/usePlaylist";
+import WidgetsPanel from "@/components/widgets/WidgetsPanel";
+import PlaylistPanel from "@/components/playlist/PlaylistPanel";
 
-export default function DashBoardPage() {
-    const [preferences, setPreferences] = useState({
-        artists: [],
-        tracks: [],
-        genres: [],
-        decades: [],
-        mood: null,
-        popularity: null,
-    });
-
-
-    const handleArtistsChange = (newArtists) => {
-        setPreferences((prev) => ({
-            ...prev,
-            artists: newArtists,
-        }));
-    };
+export default function DashboardPage() {
+    const { preferences, updatePreference } = usePreferences();
+    const {
+        playlist,
+        favorites,
+        generating,
+        playlistError,
+        generate,
+        refresh,
+        addMore,
+        removeTrackFromPlaylist,
+        toggleFavorite,
+        isTrackFavorite,
+    } = usePlaylist(preferences);
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Header/>
+            <Header />
             <main className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-                <section className="space-y-4">
-                    <ArtistWidget
-                        selectedArtists={preferences.artists}
-                        onChange={handleArtistsChange}
-                    />
-                </section>
-                {/* Debug preferencias */}
-                <section className="border rounded-md p-4">
-                    <h2 className="font-semibold mb-2">Debug preferencias</h2>
-                    <pre className="text-xs bg-black/5 p-2 rounded-md overflow-auto">
-                        {JSON.stringify(preferences, null, 2)}
-                    </pre>
-                </section>
+                <WidgetsPanel
+                    preferences={preferences}
+                    updatePreference={updatePreference}
+                    generating={generating}
+                    onGenerate={generate}
+                    onRefresh={refresh}
+                    onAddMore={addMore}
+                    playlistLength={playlist.length}
+                />
+
+                <PlaylistPanel
+                    playlist={playlist}
+                    playlistError={playlistError}
+                    generating={generating}
+                    onRemoveTrack={removeTrackFromPlaylist}
+                    onToggleFavorite={toggleFavorite}
+                    isTrackFavorite={isTrackFavorite}
+                />
             </main>
         </div>
     );
 }
-
-/*
-    const [result, setResult] = useState(null);
-    const [error, setError]   = useState(null);
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      const url = `https://api.spotify.com/v1/search?type=artist&q=radiohead&limit=5`;
-  
-      spotifyRequest(url)
-        .then((data) => {
-          console.log(data);
-          setResult(data);
-        })
-        .catch((err) => {
-          console.error(err);
-          setError(err);
-        })
-        .finally(() => setLoading(false));
-    }, []);
-  
-    if (loading) return <h1>Cargando dashboard…</h1>;
-    if (error)   return <h1>Error: {error.message}</h1>;
-    */
