@@ -1,5 +1,7 @@
 "use client";
 
+import { FaStar, FaRegStar} from "react-icons/fa";
+
 export default function TrackCard({ track, onRemove, onToggleFavorite, isFavorite }) {
 	return (
 		<div className="flex gap-3 items-center border-b py-2">
@@ -14,24 +16,22 @@ export default function TrackCard({ track, onRemove, onToggleFavorite, isFavorit
 			<div className="flex-1 min-w-0">
 				<div className="font-medium text-sm truncate">{track.name}</div>
 				<div className="text-xs text-gray-500 truncate">
-					{track.artists} • {track.album}
+					{track.artists} - {track.album}
 				</div>
 			</div>
 
 			<div className="flex flex-col items-end gap-1">
 				{onToggleFavorite && (
 					<button
-						type="button"
 						onClick={() => onToggleFavorite(track)}
 						className="text-xs"
 					>
-						{isFavorite ? "★ Fav" : "☆ Fav"}
+						{isFavorite ? <FaStar /> : <FaRegStar />} Favorita
 					</button>
 				)}
 
 				{onRemove && (
 					<button
-						type="button"
 						onClick={() => onRemove(track.id)}
 						className="text-xs text-red-500"
 					>
