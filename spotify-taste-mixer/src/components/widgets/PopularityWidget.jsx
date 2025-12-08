@@ -1,8 +1,7 @@
 "use client";
 
 export default function PopularityWidget({ popularity, onChange }) {
-    // popularity será [min, max] o [20,80]
-    const [min, max] = popularity ?? [20, 80];
+    const [min, max] = popularity;
 
     const updateMin = (value) => {
         const newMin = Number(value);
@@ -34,7 +33,7 @@ export default function PopularityWidget({ popularity, onChange }) {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <label className="text-xs text-gray-600">
+                    <div className="text-xs text-gray-600">
                         Popularidad mínima
                         <input
                             type="range"
@@ -44,9 +43,9 @@ export default function PopularityWidget({ popularity, onChange }) {
                             onChange={(e) => updateMin(e.target.value)}
                             className="w-full"
                         />
-                    </label>
+                    </div>
 
-                    <label className="text-xs text-gray-600">
+                    <div className="text-xs text-gray-600">
                         Popularidad máxima
                         <input
                             type="range"
@@ -56,11 +55,10 @@ export default function PopularityWidget({ popularity, onChange }) {
                             onChange={(e) => updateMax(e.target.value)}
                             className="w-full"
                         />
-                    </label>
+                    </div>
                 </div>
 
                 <button
-                    type="button"
                     onClick={clearFilter}
                     className="self-start mt-1 px-2 py-1 text-xs border rounded-md"
                 >
