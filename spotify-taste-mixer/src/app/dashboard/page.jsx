@@ -1,31 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAccessToken, refreshAccessToken } from "@/lib/auth";
-
-async function spotifyRequest(url) {
-  let token = getAccessToken();
-  
-  if (!token) {
-    token = await refreshAccessToken();
-    if (!token) {
-      window.location.href = "/";
-      return null;
-    }
-  }
-
-  const response = await fetch(url, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Error ${response.status}: ${response.statusText}`);
-  }
-
-  return response.json();
-}
+import { spotifyRequest } from "@/lib/spotify";
+import Header from "@/components/Header";
 
 export default function DashBoardPage() {
+  /*
   const [result, setResult] = useState(null);
   const [error, setError]   = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,11 +27,11 @@ export default function DashBoardPage() {
 
   if (loading) return <h1>Cargando dashboard…</h1>;
   if (error)   return <h1>Error: {error.message}</h1>;
-
+  */
   return (
     <>
+      <Header></Header>
       <h1>Dashboard</h1>
-      <pre>{JSON.stringify(result, null, 2)}</pre>
     </>
   );
 }
