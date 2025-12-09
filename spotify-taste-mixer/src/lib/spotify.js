@@ -22,7 +22,9 @@ export async function generatePlaylist(preferences) {
 	// 3. Filtrar por década
 	if (decades.length > 0) {
 		allTracks = allTracks.filter(track => {
-			const year = new Date(track.album.release_date).getFullYear();
+			const release_date = track.album?.release_date;
+			if (!release_date) return true; // Si no hay fecha, no filtrar
+			const year = new Date(release_date).getFullYear();
 			return decades.some(decade => {
 				const decadeStart = parseInt(decade);
 				return year >= decadeStart && year < decadeStart + 10;
@@ -33,9 +35,10 @@ export async function generatePlaylist(preferences) {
 	// 4. Filtrar por popularidad
 	if (popularity) {
 		const [min, max] = popularity;
-		allTracks = allTracks.filter(
-			track => track.popularity >= min && track.popularity <= max
-		);
+		allTracks = allTracks.filter(track => {
+			if (typeof track.popularity !== "number") return true; // Si no hay popularidad, no filtrar
+			return track.popularity >= min && track.popularity <= max;
+		});
 	}
 
 	const simplified = allTracks.map((track) => {
