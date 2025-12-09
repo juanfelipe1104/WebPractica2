@@ -47,7 +47,7 @@ export function saveTokens(accessToken, refreshToken, expiresIn) {
 }
 
 // Obtener token actual (con verificación de expiración)
-export function getAccessToken() {
+export async function getAccessToken() {
   const token = localStorage.getItem('spotify_token');
   const expiration = localStorage.getItem('spotify_token_expiration');
   
@@ -55,7 +55,8 @@ export function getAccessToken() {
   
   // Si el token expiró, retornar null
   if (Date.now() > parseInt(expiration)) {
-    return null;
+    const newToken = await refreshAccessToken();
+    return newToken;
   }
   
   return token;
