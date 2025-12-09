@@ -41,6 +41,7 @@ export async function generatePlaylist(preferences) {
 		});
 	}
 
+	// 5. Simplificar objetos de canciones
 	const simplified = allTracks.map((track) => {
 		let artistsStr;
 		if (Array.isArray(track.artists)) {
@@ -62,12 +63,30 @@ export async function generatePlaylist(preferences) {
 		};
 	});
 
-	// 5. Eliminar duplicados y limitar a 30 canciones
+	// 6. Eliminar duplicados y limitar a 100 canciones
 	const uniqueTracks = Array.from(
 		new Map(simplified.map(track => [track.id, track])).values()
-	).slice(0, 30);
+	).slice(0, 100);
 
-	return uniqueTracks
+	// 7. Shuffle tracks
+	function shuffleArray(array) {
+		for (let i = array.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[array[i], array[j]] = [array[j], array[i]];
+		}
+		return array;
+	}
+
+	// 8. Ver canciones elegidas por el usuario y completar con aleatorias
+	const selectedTrackIds = new Set(tracks.map(t => t.id));
+	const userTracks = uniqueTracks.filter((t) => selectedTrackIds.has(t.id));
+  	const otherTracks = uniqueTracks.filter((t) => !selectedTrackIds.has(t.id));
+	shuffleArray(otherTracks);
+
+	// 9. Combinar y limitar a 30 canciones
+	const final = [...userTracks, ...otherTracks].slice(0, 30);
+
+	return final;
 }
 
 export async function spotifyRequest(url, options = {}) {
