@@ -32,16 +32,18 @@ export default function DashboardPage() {
     };
 
     return (
-        <main className="flex-1 max-w-6xl mx-auto w-full p-4 md:p-6">
-            <WidgetsPanel
-                preferences={preferences}
-                updatePreference={updatePreference}
-                generating={generating}
-                onGenerate={goAndGenerate}
-                onRefresh={goAndRefresh}
-                onAddMore={goAndAddMore}
-                playlistLength={playlist.length}
-            />
+        <main className="flex-1">
+            <div className="max-w-6xl mx-auto w-full p-4 md:p-6">
+                <WidgetsPanel
+                    preferences={preferences}
+                    updatePreference={updatePreference}
+                    generating={generating}
+                    onGenerate={goAndGenerate}
+                    onRefresh={goAndRefresh}
+                    onAddMore={goAndAddMore}
+                    playlistLength={playlist.length}
+                />
+            </div>
         </main>
     );
 }
