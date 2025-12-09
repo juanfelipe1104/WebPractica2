@@ -1,4 +1,4 @@
-import { getAccessToken, refreshAccessToken } from "./auth";
+import { getAccessToken } from "./auth";
 
 export async function generatePlaylist(preferences) {
 	const { artists, tracks, genres, decades, popularity } = preferences;
