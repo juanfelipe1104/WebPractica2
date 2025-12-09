@@ -9,9 +9,12 @@ export default function Home() {
 
 	useEffect(() => {
 		// Si ya está autenticado, redirigir al dashboard
-		if (isAuthenticated()) {
-			router.push('/spotifyApp/dashboard');
-		}
+		const checkAuth = async () => {
+			if (await isAuthenticated()) {
+				router.replace('/spotifyApp/dashboard');
+			}
+		};
+		checkAuth();
 	}, [router]);
 
 	const handleLogin = () => {

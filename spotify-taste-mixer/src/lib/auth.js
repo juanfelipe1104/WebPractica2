@@ -63,8 +63,8 @@ export async function getAccessToken() {
 }
 
 // Verificar si hay token válido
-export function isAuthenticated() {
-  return getAccessToken() !== null;
+export async function isAuthenticated() {
+  return await getAccessToken() !== null;
 }
 
 // Cerrar sesión

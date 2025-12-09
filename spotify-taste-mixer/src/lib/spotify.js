@@ -71,12 +71,11 @@ export async function generatePlaylist(preferences) {
 }
 
 export async function spotifyRequest(url, options = {}) {
-	let token = getAccessToken();
+	let token = await getAccessToken();
 
 	// Si no hay token, redirigir al login
 	if (!token) {
-		window.location.href = "/";
-		return null;
+		throw new Error("No hay token de Spotify. Inicia sesión de nuevo.");
 	}
 
 	const response = await fetch(url, {
