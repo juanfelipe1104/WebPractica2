@@ -11,7 +11,7 @@ export default function ArtistWidget({ selectedArtists, onChange }) {
 
     // Saber si un artista ya está seleccionado
     const isSelected = (artist) => {
-        selectedArtists.some((a) => a.id === artist.id);
+        return selectedArtists.some((a) => a.id === artist.id);
     };
 
     const toggleArtist = (artist) => {
