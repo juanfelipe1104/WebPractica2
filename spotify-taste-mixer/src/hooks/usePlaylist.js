@@ -101,6 +101,17 @@ export function usePlaylist(preferences) {
         }
     };
 
+    const addTrackToPlaylist = (track) => {
+        setPlaylist((prev) => {
+            if (prev.some((t) => t.id === track.id)) return prev;
+            return [...prev, track];
+        });
+    };
+
+    const isInPlaylist = (id) => {
+        playlist.some((t) => t.id === id);
+    };
+
     return {
         playlist,
         favorites,
@@ -112,5 +123,7 @@ export function usePlaylist(preferences) {
         removeTrackFromPlaylist,
         toggleFavorite,
         isTrackFavorite,
+        addTrackToPlaylist,
+        isInPlaylist
     };
 }
