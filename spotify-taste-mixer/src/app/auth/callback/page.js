@@ -61,7 +61,7 @@ export default function CallbackPage() {
         saveTokens(data.access_token, data.refresh_token, data.expires_in);
 
         // Redirigir al dashboard
-        router.push('/dashboard');
+        router.push('/spotifyApp/dashboard');
 
       } catch (error) {
         console.error('Error:', error);

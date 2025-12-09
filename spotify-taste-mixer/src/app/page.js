@@ -10,7 +10,7 @@ export default function Home() {
 	useEffect(() => {
 		// Si ya está autenticado, redirigir al dashboard
 		if (isAuthenticated()) {
-			router.push('/dashboard');
+			router.push('/spotifyApp/dashboard');
 		}
 	}, [router]);
 
