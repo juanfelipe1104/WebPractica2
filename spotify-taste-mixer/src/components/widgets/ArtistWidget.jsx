@@ -10,8 +10,9 @@ export default function ArtistWidget({ selectedArtists, onChange }) {
     const [error, setError] = useState(null);
 
     // Saber si un artista ya está seleccionado
-    const isSelected = (artist) =>
+    const isSelected = (artist) => {
         selectedArtists.some((a) => a.id === artist.id);
+    };
 
     const toggleArtist = (artist) => {
         const alreadySelected = isSelected(artist);
@@ -61,58 +62,78 @@ export default function ArtistWidget({ selectedArtists, onChange }) {
     }, [query]);
 
     return (
-        <div className="border rounded-md p-4">
-            <h2 className="font-semibold mb-3">Artistas</h2>
-            <p className="text-sm text-gray-500 mb-3">
-                Busca artistas en Spotify y selecciónalos para usarlos en la playlist.
+        <div className="rounded-2xl bg-[#181818]/90 border border-white/5 p-4 shadow-lg shadow-black/40">
+            <h2 className="font-semibold mb-2 text-base">Artistas</h2>
+            <p className="text-xs text-white/60 mb-3">
+                Busca artistas en Spotify y selecciónalos para influir en la playlist.
             </p>
 
-            {/* input de búsqueda */}
+            {/* Input de búsqueda */}
             <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Buscar artista…"
-                className="w-full mb-3 px-3 py-2 border rounded-md text-sm"
+                className="w-full mb-3 px-3 py-2 rounded-full text-sm bg-white/5 border border-white/10 focus:border-[#1DB954] focus:outline-none placeholder:text-white/40"
             />
 
             {loading && (
-                <p className="text-xs text-gray-500 mb-2">Buscando artistas…</p>
+                <p className="text-xs text-white/60 mb-2">Buscando artistas…</p>
             )}
-            {error && <p className="text-xs text-red-500 mb-2">{error}</p>}
+            {error && <p className="text-xs text-red-400 mb-2">{error}</p>}
 
-            {/* resultados */}
-            <div className="flex flex-wrap gap-2 mb-3">
+            {/* Resultados */}
+            <div className="space-y-2 max-h-64 overflow-auto pr-1">
                 {results.map((artist) => (
                     <button
                         key={artist.id}
                         onClick={() => toggleArtist(artist)}
-                        className={`px-3 py-1 rounded-full text-sm border flex items-center gap-2 transition
+                        className={`w-full flex items-center gap-3 px-2 py-2 rounded-lg text-left transition
                             ${isSelected(artist)
-                                ? "bg-green-500 text-white border-green-500"
-                                : "bg-white text-gray-800"
+                                ? "bg-[#1DB954] text-black"
+                                : "bg-white/5 hover:bg-white/10 text-white"
                             }`}
                     >
                         {artist.images?.[0]?.url && (
                             <img
                                 src={artist.images[0].url}
                                 alt={artist.name}
-                                className="w-6 h-6 rounded-full object-cover"
+                                className="w-10 h-10 rounded-full object-cover shrink-0"
                             />
                         )}
-                        <span>{artist.name}</span>
+                        <div className="min-w-0 flex-1">
+                            <div className="text-sm font-medium truncate">
+                                {artist.name}
+                            </div>
+                            <div className="text-[11px] text-white/60 truncate">
+                                {artist.followers?.total
+                                    ? Intl.NumberFormat("en", {
+                                        notation: "compact",
+                                    }).format(artist.followers.total) + " seguidores"
+                                    : "Artista"}
+                            </div>
+                        </div>
+                        <span
+                            className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border
+                                ${isSelected(artist)
+                                    ? "border-black/30 bg-black/10"
+                                    : "border-white/20 bg-black/30"
+                                }`}
+                        >
+                            {isSelected(artist) ? "Seleccionado" : "Añadir"}
+                        </span>
                     </button>
                 ))}
 
                 {!loading && !error && query && results.length === 0 && (
-                    <p className="text-xs text-gray-500">
-                        No se encontraron artistas para "{query}".
+                    <p className="text-xs text-white/60">
+                        No se encontraron artistas para “{query}”.
                     </p>
                 )}
             </div>
 
-            {/* resumen de seleccionados */}
-            <div className="mt-2 text-xs text-gray-600">
+            {/* Resumen de seleccionados */}
+            <div className="mt-3 text-[11px] text-white/60">
                 Seleccionados:{" "}
                 {selectedArtists.length === 0
                     ? "ninguno"

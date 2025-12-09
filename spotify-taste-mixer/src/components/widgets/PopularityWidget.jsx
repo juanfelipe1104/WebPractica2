@@ -20,55 +20,60 @@ export default function PopularityWidget({ popularity, onChange }) {
     };
 
     return (
-        <div className="border rounded-md p-4">
-            <h2 className="font-semibold mb-3">Popularidad</h2>
-            <p className="text-sm text-gray-500 mb-3">
+        <div className="rounded-2xl bg-[#181818]/90 border border-white/5 p-4 shadow-lg shadow-black/40">
+            <h2 className="font-semibold mb-2 text-base">Popularidad</h2>
+            <p className="text-xs text-white/60 mb-3">
                 Filtra las canciones según su popularidad en Spotify (0–100).
             </p>
 
             <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center justify-between text-[11px] text-white/60">
                     <span>Mín: {min}</span>
                     <span>Máx: {max}</span>
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    <div className="text-xs text-gray-600">
-                        Popularidad mínima
+                <div className="space-y-3">
+                    <div>
+                        <div className="flex justify-between text-[11px] text-white/60 mb-1">
+                            <span>Popularidad mínima</span>
+                        </div>
                         <input
                             type="range"
                             min="0"
                             max="100"
                             value={min}
                             onChange={(e) => updateMin(e.target.value)}
-                            className="w-full"
+                            className="w-full accent-[#1DB954]"
                         />
                     </div>
 
-                    <div className="text-xs text-gray-600">
-                        Popularidad máxima
+                    <div>
+                        <div className="flex justify-between text-[11px] text-white/60 mb-1">
+                            <span>Popularidad máxima</span>
+                        </div>
                         <input
                             type="range"
                             min="0"
                             max="100"
                             value={max}
                             onChange={(e) => updateMax(e.target.value)}
-                            className="w-full"
+                            className="w-full accent-[#1DB954]"
                         />
                     </div>
                 </div>
 
-                <button
-                    onClick={clearFilter}
-                    className="self-start mt-1 px-2 py-1 text-xs border rounded-md"
-                >
-                    Quitar filtro de popularidad
-                </button>
-
-                <div className="text-xs text-gray-600 mt-1">
-                    {popularity
-                        ? `Filtrando canciones con popularidad entre ${min} y ${max}.`
-                        : "Sin filtro de popularidad (se permiten todos los niveles)."}
+                <div className="flex items-center justify-between mt-1">
+                    <button
+                        onClick={clearFilter}
+                        className="px-2 py-1 text-[11px] border border-white/20 rounded-full text-white/70 hover:bg-white/10 transition"
+                    >
+                        Quitar filtro
+                    </button>
+                    <span className="text-[11px] text-white/60">
+                        {popularity
+                            ? `Mostrando ${min}–${max}`
+                            : "Sin filtro de popularidad"}
+                    </span>
                 </div>
             </div>
         </div>
