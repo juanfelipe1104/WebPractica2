@@ -10,24 +10,11 @@ export default function DashboardPage() {
         preferences,
         updatePreference,
         generate,
-        refresh,
-        addMore,
-        generating,
-        playlist,
+        generating
     } = useAppState();
 
     const goAndGenerate = async () => {
         await generate();
-        router.push("/spotifyApp/playlist");
-    };
-
-    const goAndRefresh = async () => {
-        await refresh();
-        router.push("/spotifyApp/playlist");
-    };
-
-    const goAndAddMore = async () => {
-        await addMore();
         router.push("/spotifyApp/playlist");
     };
 
@@ -39,9 +26,6 @@ export default function DashboardPage() {
                     updatePreference={updatePreference}
                     generating={generating}
                     onGenerate={goAndGenerate}
-                    onRefresh={goAndRefresh}
-                    onAddMore={goAndAddMore}
-                    playlistLength={playlist.length}
                 />
             </div>
         </main>

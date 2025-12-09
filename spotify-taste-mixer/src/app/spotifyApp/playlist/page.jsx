@@ -3,6 +3,8 @@
 import { useAppState } from "@/context/AppStateContext";
 import PlaylistPanel from "@/components/playlist/PlaylistPanel";
 import FavoritesPanel from "@/components/playlist/FavoritesPanel";
+import AddTrackPanel from "@/components/playlist/AddTrackPanel";
+import { useState } from "react";
 
 export default function PlaylistPage() {
     const {
@@ -12,13 +14,14 @@ export default function PlaylistPage() {
         playlistError,
         generate,
         refresh,
-        addMore,
         removeTrackFromPlaylist,
         toggleFavorite,
         isTrackFavorite,
         addTrackToPlaylist,
-        isInPlaylist,
+        isInPlaylist
     } = useAppState();
+
+    const [showAddPanel, setShowAddPanel] = useState(false);
 
     return (
         <main className="flex-1">
@@ -46,13 +49,20 @@ export default function PlaylistPage() {
 
                         <button
                             type="button"
-                            onClick={addMore}
-                            disabled={generating}
-                            className="px-4 py-2 rounded-full text-sm border border-white/20 text-white/90 hover:border-white hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                            onClick={() => setShowAddPanel((prev) => !prev)}
+                            className="px-4 py-2 rounded-full text-sm border border-white/20 text-white/90 hover:border-white hover:bg-white/5 transition"
                         >
-                            Añadir más
+                            {showAddPanel ? "Cerrar buscador" : "Añadir más"}
                         </button>
                     </div>
+
+                    {/* Panel desplegable para añadir canciones manualmente */}
+                    {showAddPanel && (
+                        <AddTrackPanel
+                            onAddTrack={addTrackToPlaylist}
+                            existingTrackIds={playlist.map((t) => t.id)}
+                        />
+                    )}
 
                     <PlaylistPanel
                         playlist={playlist}
