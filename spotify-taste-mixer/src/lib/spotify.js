@@ -1,7 +1,7 @@
 import { getAccessToken } from "./auth";
 
 export async function generatePlaylist(preferences) {
-	const { artists, tracks, genres, decades, popularity } = preferences;
+	const { artists, tracks, genres, decades, popularity, mood } = preferences;
 	let allTracks = [];
 
 	//0. Incluir tracks seleccionadas directamente
@@ -13,8 +13,10 @@ export async function generatePlaylist(preferences) {
 		allTracks.push(...data.tracks);
 	}
 
+	const effectiveGenres = getEffectiveGenres(genres, mood);
+
 	// 2. Buscar por géneros
-	for (const genre of genres) {
+	for (const genre of effectiveGenres) {
 		const data = await spotifyRequest(`https://api.spotify.com/v1/search?type=track&q=genre:${genre}&limit=20`);
 		allTracks.push(...data.tracks.items);
 	}
@@ -193,4 +195,72 @@ export async function spotifyRequest(url, options = {}) {
 	}
 
 	return response.json();
+}
+
+const MOOD_GENRE_MAP = {
+	happy: [
+		"Pop",
+		"Dance",
+		"Latin",
+		"Electronic",
+		"House",
+		"Disco",
+	],
+	sad: [
+		"Indie",
+		"Blues",
+		"Soul",
+		"Lo Fi",
+		"Classical",
+		"Soundtrack",
+	],
+	energetic: [
+		"Rock",
+		"Pop",
+		"Hip Hop",
+		"Rap",
+		"Metal",
+		"Punk",
+		"Electronic",
+		"House",
+		"Techno",
+		"Dance",
+		"Reggaeton",
+	],
+	calm: [
+		"Indie",
+		"Jazz",
+		"Blues",
+		"Soul",
+		"R&B",
+		"Classical",
+		"Soundtrack",
+		"Lo Fi",
+		"Acoustic",
+	],
+};
+
+function getEffectiveGenres(userGenres, mood) {
+	const preset = mood?.preset;
+	if (!preset || !MOOD_GENRE_MAP[preset]) {
+		// sin preset, devolvemos los géneros del usuario
+		return userGenres;
+	}
+
+	const moodGenres = MOOD_GENRE_MAP[preset];
+
+	// Si el usuario no ha elegido géneros, usamos solo los del mood
+	if (!userGenres || userGenres.length === 0) {
+		return moodGenres;
+	}
+
+	// Si sí ha elegido géneros, nos quedamos con la intersección
+	const intersection = userGenres.filter((g) => moodGenres.includes(g));
+
+	if (intersection.length > 0) {
+		return intersection;
+	}
+
+	// Si no coinciden nada respetamos al usuario (no los pisamos)
+	return userGenres;
 }
