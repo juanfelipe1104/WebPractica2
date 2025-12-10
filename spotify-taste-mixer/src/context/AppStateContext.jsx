@@ -7,20 +7,20 @@ import { usePlaylist } from "@/hooks/usePlaylist";
 const AppStateContext = createContext(null);
 
 export function AppStateProvider({ children }) {
-  const prefs = usePreferences();
-  const playlist = usePlaylist(prefs.preferences);
+	const prefs = usePreferences();
+	const playlist = usePlaylist(prefs.preferences);
 
-  return (
-    <AppStateContext.Provider value={{ ...prefs, ...playlist }}>
-      {children}
-    </AppStateContext.Provider>
-  );
+	return (
+		<AppStateContext.Provider value={{ ...prefs, ...playlist }}>
+			{children}
+		</AppStateContext.Provider>
+	);
 }
 
 export function useAppState() {
-  const ctx = useContext(AppStateContext);
-  if (!ctx) {
-    throw new Error("useAppState must be used within AppStateProvider");
-  }
-  return ctx;
+	const ctx = useContext(AppStateContext);
+	if (!ctx) {
+		throw new Error("useAppState must be used within AppStateProvider");
+	}
+	return ctx;
 }
