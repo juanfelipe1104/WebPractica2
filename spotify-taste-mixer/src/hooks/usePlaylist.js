@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { generatePlaylist } from "@/lib/spotify";
+import { generatePlaylist, savePlaylistToSpotify as saveOnSpotifyApi } from "@/lib/spotify";
 
 const FAVORITES_KEY = "spotify_favorite_tracks";
 
@@ -10,7 +10,7 @@ export function usePlaylist(preferences) {
     const [generating, setGenerating] = useState(false);
     const [playlistError, setPlaylistError] = useState(null);
     const [favorites, setFavorites] = useState([]);
-
+    const [saving, setSaving] = useState(false);
     // cargar favoritos desde localStorage
     useEffect(() => {
         const raw = localStorage.getItem(FAVORITES_KEY);
@@ -112,6 +112,24 @@ export function usePlaylist(preferences) {
         playlist.some((t) => t.id === id);
     };
 
+    const savePlaylistToSpotify = async (name, description) => {
+        if (playlist.length === 0) {
+            throw new Error("NO_TRACKS");
+        }
+
+        setSaving(true);
+        try {
+            const created = await saveOnSpotifyApi(playlist, { name, description, isPublic: false });
+            return created;
+        } catch (err) {
+            console.error("Error al guardar playlist en Spotify:", err);
+            throw err;
+        } finally {
+            setSaving(false);
+        }
+    };
+
+
     return {
         playlist,
         favorites,
@@ -124,6 +142,8 @@ export function usePlaylist(preferences) {
         toggleFavorite,
         isTrackFavorite,
         addTrackToPlaylist,
-        isInPlaylist
+        isInPlaylist,
+        savePlaylistToSpotify,
+        saving
     };
 }

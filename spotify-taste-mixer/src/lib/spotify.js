@@ -80,13 +80,66 @@ export async function generatePlaylist(preferences) {
 	// 8. Ver canciones elegidas por el usuario y completar con aleatorias
 	const selectedTrackIds = new Set(tracks.map(t => t.id));
 	const userTracks = uniqueTracks.filter((t) => selectedTrackIds.has(t.id));
-  	const otherTracks = uniqueTracks.filter((t) => !selectedTrackIds.has(t.id));
+	const otherTracks = uniqueTracks.filter((t) => !selectedTrackIds.has(t.id));
 	shuffleArray(otherTracks);
 
 	// 9. Combinar y limitar a 30 canciones
 	const final = [...userTracks, ...otherTracks].slice(0, 30);
 
 	return final;
+}
+
+// Crea una playlist en la cuenta del usuario actual
+export async function createSpotifyPlaylist(name, description = "", isPublic = false) {
+	const body = {
+		name,
+		description,
+		public: isPublic,
+	};
+
+	const data = await spotifyRequest("https://api.spotify.com/v1/me/playlists", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(body),
+	});
+
+	return data; // contiene id, external_urls.spotify, ...
+}
+
+// Añade una lista de track IDs a una playlist de Spotify
+export async function addTracksToSpotifyPlaylist(playlistId, trackIds) {
+	if (!trackIds || trackIds.length === 0) return;
+
+	const uris = trackIds.map((id) => `spotify:track:${id}`);
+
+	// Spotify solo permite 100 URIs por petición
+	const chunkSize = 100;
+	for (let i = 0; i < uris.length; i += chunkSize) {
+		const chunk = uris.slice(i, i + chunkSize);
+
+		await spotifyRequest(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ uris: chunk })
+		});
+	}
+}
+
+// Guardar la playlist actual (array de tracks) en Spotify
+export async function savePlaylistToSpotify(tracks, { name, description = "", isPublic = false } = {}) {
+	if (!tracks || tracks.length === 0) {
+		throw new Error("NO_TRACKS");
+	}
+
+	const created = await createSpotifyPlaylist(name, description, isPublic);
+
+	await addTracksToSpotifyPlaylist(created.id, tracks.map((t) => t.id));
+
+	return created; // devolvemos para obtener el enlace a Spotify
 }
 
 export async function spotifyRequest(url, options = {}) {

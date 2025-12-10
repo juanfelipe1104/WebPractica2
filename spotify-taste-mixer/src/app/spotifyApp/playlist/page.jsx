@@ -18,10 +18,52 @@ export default function PlaylistPage() {
         toggleFavorite,
         isTrackFavorite,
         addTrackToPlaylist,
-        isInPlaylist
+        isInPlaylist,
+        savePlaylistToSpotify,
+        saving
     } = useAppState();
 
     const [showAddPanel, setShowAddPanel] = useState(false);
+    const [saveMessage, setSaveMessage] = useState(null);
+    const [saveError, setSaveError] = useState(null);
+
+    const handleSaveToSpotify = async () => {
+        if (playlist.length === 0) {
+            setSaveError("No hay canciones en la playlist para guardar.");
+            setSaveMessage(null);
+            return;
+        }
+
+        const defaultName =
+            "Taste Mixer - " + new Date().toLocaleString("es-ES");
+
+        const name = window.prompt(
+            "Nombre de la playlist en tu cuenta de Spotify:",
+            defaultName
+        );
+
+        if (!name) return; // usuario canceló
+
+        setSaveError(null);
+        setSaveMessage(null);
+
+        try {
+            const created = await savePlaylistToSpotify(
+                name,
+                "Generada con Spotify Taste Mixer"
+            );
+            const url = created?.external_urls?.spotify;
+
+            setSaveMessage(
+                url
+                    ? `Playlist guardada correctamente. Puedes abrirla en Spotify aquí: ${url}`
+                    : "Playlist guardada correctamente en tu cuenta de Spotify."
+            );
+        } catch (err) {
+            setSaveError("No se pudo guardar la playlist en Spotify.");
+        }
+    };
+
 
     return (
         <main className="flex-1">
@@ -54,8 +96,25 @@ export default function PlaylistPage() {
                         >
                             {showAddPanel ? "Cerrar buscador" : "Añadir más"}
                         </button>
+                        <button
+                            type="button"
+                            onClick={handleSaveToSpotify}
+                            disabled={saving || generating || playlist.length === 0}
+                            className="px-4 py-2 rounded-full text-sm border border-[#1DB954] text-[#1DB954] hover:bg-[#1DB954]/10 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        >
+                            {saving ? "Guardando..." : "Guardar en Spotify"}
+                        </button>
                     </div>
 
+                    {/* Mensajes de guardado */}
+                    {(saveMessage || saveError) && (
+                        <div className="text-xs">
+                            {saveMessage && (
+                                <p className="text-[#1DB954] wrap-break-words">{saveMessage}</p>
+                            )}
+                            {saveError && <p className="text-red-400">{saveError}</p>}
+                        </div>
+                    )}
                     {/* Panel desplegable para añadir canciones manualmente */}
                     {showAddPanel && (
                         <AddTrackPanel
