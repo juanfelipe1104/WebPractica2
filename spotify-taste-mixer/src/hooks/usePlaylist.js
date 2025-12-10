@@ -22,6 +22,12 @@ export function usePlaylist(preferences) {
         }
     }, []);
 
+    const resetPlaylist = () => {
+        setPlaylist([]);
+        setPlaylistError(null);
+    };
+
+
     const saveFavorites = (next) => {
         setFavorites(next);
         localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
@@ -159,6 +165,7 @@ export function usePlaylist(preferences) {
         savePlaylistToSpotify,
         saving,
         reorderTrackInPlaylist,
-        loadPlaylist
+        loadPlaylist,
+        resetPlaylist
     };
 }

@@ -21,7 +21,8 @@ export default function PlaylistPage() {
         isInPlaylist,
         savePlaylistToSpotify,
         saving,
-        reorderTrackInPlaylist
+        reorderTrackInPlaylist,
+        resetPlaylist
     } = useAppState();
 
     const [showAddPanel, setShowAddPanel] = useState(false);
@@ -73,7 +74,6 @@ export default function PlaylistPage() {
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-wrap gap-2">
                         <button
-                            type="button"
                             onClick={generate}
                             disabled={generating}
                             className="px-4 py-2 rounded-full text-sm font-semibold bg-[#1DB954] text-black hover:bg-[#1ed760] disabled:opacity-60 disabled:cursor-not-allowed transition"
@@ -82,7 +82,6 @@ export default function PlaylistPage() {
                         </button>
 
                         <button
-                            type="button"
                             onClick={refresh}
                             disabled={generating || playlist.length === 0}
                             className="px-4 py-2 rounded-full text-sm border border-white/20 text-white/90 hover:border-white hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition"
@@ -91,14 +90,19 @@ export default function PlaylistPage() {
                         </button>
 
                         <button
-                            type="button"
                             onClick={() => setShowAddPanel((prev) => !prev)}
                             className="px-4 py-2 rounded-full text-sm border border-white/20 text-white/90 hover:border-white hover:bg-white/5 transition"
                         >
                             {showAddPanel ? "Cerrar buscador" : "Añadir más"}
                         </button>
                         <button
-                            type="button"
+                            onClick={resetPlaylist}
+                            disabled={generating || playlist.length === 0}
+                            className="px-4 py-2 rounded-full text-sm border border-red-500 text-red-400 hover:bg-red-500/10 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                        >
+                            Reset playlist
+                        </button>
+                        <button
                             onClick={handleSaveToSpotify}
                             disabled={saving || generating || playlist.length === 0}
                             className="px-4 py-2 rounded-full text-sm border border-[#1DB954] text-[#1DB954] hover:bg-[#1DB954]/10 disabled:opacity-50 disabled:cursor-not-allowed transition"
