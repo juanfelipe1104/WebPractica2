@@ -7,7 +7,7 @@ import DecadeWidget from "@/components/widgets/DecadeWidget";
 import PopularityWidget from "@/components/widgets/PopularityWidget";
 import MoodWidget from "@/components/widgets/MoodWidget";
 
-export default function WidgetsPanel({ preferences, updatePreference, generating, onGenerate }) {
+export default function WidgetsPanel({ preferences, updatePreference, resetPreferences, generating, onGenerate }) {
     const setArtists = updatePreference("artists");
     const setTracks = updatePreference("tracks");
     const setGenres = updatePreference("genres");
@@ -26,6 +26,13 @@ export default function WidgetsPanel({ preferences, updatePreference, generating
                 >
                     {generating ? "Generando..." : "Generar playlist"}
                 </button>
+                <button
+                    onClick={resetPreferences}
+                    className="px-3 py-1 rounded-full border border-white/20 hover:bg-white/10 text-sm"
+                >
+                    Reset filtros
+                </button>
+
             </div>
 
             {/* Grid de widgets: 1 col en móvil, 2 cols en pantallas grandes */}

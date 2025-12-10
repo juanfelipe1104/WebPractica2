@@ -9,6 +9,7 @@ export default function DashboardPage() {
     const {
         preferences,
         updatePreference,
+        resetPreferences,
         generate,
         generating
     } = useAppState();
@@ -24,6 +25,7 @@ export default function DashboardPage() {
                 <WidgetsPanel
                     preferences={preferences}
                     updatePreference={updatePreference}
+                    resetPreferences={resetPreferences}
                     generating={generating}
                     onGenerate={goAndGenerate}
                 />
