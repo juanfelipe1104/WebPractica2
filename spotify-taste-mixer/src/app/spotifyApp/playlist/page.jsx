@@ -20,7 +20,8 @@ export default function PlaylistPage() {
         addTrackToPlaylist,
         isInPlaylist,
         savePlaylistToSpotify,
-        saving
+        saving,
+        reorderTrackInPlaylist
     } = useAppState();
 
     const [showAddPanel, setShowAddPanel] = useState(false);
@@ -130,6 +131,7 @@ export default function PlaylistPage() {
                         onRemoveTrack={removeTrackFromPlaylist}
                         onToggleFavorite={toggleFavorite}
                         isTrackFavorite={isTrackFavorite}
+                        onReorder={reorderTrackInPlaylist}
                     />
                 </div>
 

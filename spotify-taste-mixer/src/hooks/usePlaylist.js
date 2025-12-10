@@ -129,6 +129,14 @@ export function usePlaylist(preferences) {
         }
     };
 
+    const reorderTrackInPlaylist = (fromIndex, toIndex) => {
+        setPlaylist((prev) => {
+            const updated = [...prev];
+            const [moved] = updated.splice(fromIndex, 1);
+            updated.splice(toIndex, 0, moved);
+            return updated;
+        });
+    };
 
     return {
         playlist,
@@ -144,6 +152,7 @@ export function usePlaylist(preferences) {
         addTrackToPlaylist,
         isInPlaylist,
         savePlaylistToSpotify,
-        saving
+        saving,
+        reorderTrackInPlaylist
     };
 }

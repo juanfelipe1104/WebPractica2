@@ -1,8 +1,35 @@
 "use client";
 
 import TrackCard from "@/components/playlist/TrackCard";
+import { useState } from "react";
 
-export default function PlaylistPanel({ playlist, playlistError, generating, onRemoveTrack, onToggleFavorite, isTrackFavorite }) {
+export default function PlaylistPanel({ playlist, playlistError, generating, onRemoveTrack, onToggleFavorite, isTrackFavorite, onReorder }) {
+    const [draggedIndex, setDraggedIndex] = useState(null);
+    const [overIndex, setOverIndex] = useState(null);
+
+    const handleDragStart = (index, e) => {
+        setDraggedIndex(index);
+        e.dataTransfer.effectAllowed = "move";
+    };
+
+    const handleDragOver = (index, e) => {
+        e.preventDefault();
+        setOverIndex(index);
+    };
+
+    const handleDrop = (index, e) => {
+        e.preventDefault();
+        if (draggedIndex !== null && draggedIndex !== index) {
+            onReorder(draggedIndex, index);
+        }
+        setDraggedIndex(null);
+        setOverIndex(null);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedIndex(null);
+        setOverIndex(null);
+    };
     return (
         <section className="rounded-2xl bg-[#181818]/90 border border-white/5 p-4 shadow-xl shadow-black/40 flex flex-col">
             {/* Cabecera */}
@@ -33,7 +60,19 @@ export default function PlaylistPanel({ playlist, playlistError, generating, onR
             {/* Lista de temas */}
             <div className="mt-2 flex-1 overflow-auto pr-1 space-y-1">
                 {playlist.map((track, index) => (
-                    <div key={track.id} className="flex items-center gap-2">
+                    <div
+                        key={track.id}
+                        draggable
+                        onDragStart={(e) => handleDragStart(index, e)}
+                        onDragOver={(e) => handleDragOver(index, e)}
+                        onDrop={(e) => handleDrop(index, e)}
+                        onDragEnd={handleDragEnd}
+                        className={`flex items-center gap-2 px-2 py-1 rounded-lg cursor-grab active:cursor-grabbing transition
+                            ${overIndex === index
+                                ? "bg-white/10"
+                                : "bg-transparent hover:bg-white/5"
+                            }`}
+                    >
                         {/* Número de pista */}
                         <span className="w-5 text-right text-[11px] text-white/50">
                             {index + 1}
