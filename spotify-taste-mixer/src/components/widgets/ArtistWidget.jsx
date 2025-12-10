@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { spotifyRequest } from "@/lib/spotify";
+import Image from "next/image";
 
 export default function ArtistWidget({ selectedArtists, onChange }) {
     const [query, setQuery] = useState("");
@@ -95,10 +96,12 @@ export default function ArtistWidget({ selectedArtists, onChange }) {
                             }`}
                     >
                         {artist.images?.[0]?.url && (
-                            <img
+                            <Image
                                 src={artist.images[0].url}
                                 alt={artist.name}
-                                className="w-10 h-10 rounded-full object-cover shrink-0"
+                                width={40}
+                                height={40}
+                                className="rounded-full object-cover shrink-0"
                             />
                         )}
                         <div className="min-w-0 flex-1">

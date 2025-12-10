@@ -1,16 +1,19 @@
 "use client";
 
 import { FaStar, FaRegStar } from "react-icons/fa";
+import Image from "next/image";
 
 export default function TrackCard({ track, onRemove, onToggleFavorite, isFavorite }) {
 	return (
 		<div className="flex items-center w-full px-2 py-2 rounded-lg hover:bg-white/5 transition">
 			{/* Portada */}
 			{track.image && (
-				<img
+				<Image
 					src={track.image}
 					alt={track.name}
-					className="w-12 h-12 rounded-md object-cover shrink-0"
+					width={48}
+					height={48}
+					className="rounded-md object-cover shrink-0"
 				/>
 			)}
 

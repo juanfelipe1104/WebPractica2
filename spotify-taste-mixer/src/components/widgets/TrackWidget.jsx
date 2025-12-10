@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { spotifyRequest } from "@/lib/spotify";
+import Image from "next/image";
 
 export default function TrackWidget({ selectedTracks, onChange }) {
     const [query, setQuery] = useState("");
@@ -91,10 +92,12 @@ export default function TrackWidget({ selectedTracks, onChange }) {
                             }`}
                     >
                         {track.album.images?.[1]?.url && (
-                            <img
+                            <Image
                                 src={track.album.images[1].url}
                                 alt={track.name}
-                                className="w-10 h-10 rounded-md object-cover shrink-0"
+                                width={40}
+                                height={40}
+                                className="rounded-md object-cover shrink-0"
                             />
                         )}
 
