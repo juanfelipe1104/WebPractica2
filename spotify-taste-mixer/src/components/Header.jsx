@@ -16,6 +16,7 @@ export default function Header() {
 	const navItems = [
 		{ href: "/spotifyApp/dashboard", label: "Dashboard" },
 		{ href: "/spotifyApp/playlist", label: "Playlist" },
+		{ href: "/spotifyApp/library", label: "Biblioteca" }
 	];
 
 	return (
@@ -46,7 +47,7 @@ export default function Header() {
 								key={item.href}
 								href={item.href}
 								className={`px-3 py-1.5 rounded-full text-sm transition
-                  ${active
+                  					${active
 										? "bg-white text-black font-semibold"
 										: "text-white/70 hover:text-white hover:bg-white/10"
 									}`}

@@ -142,6 +142,36 @@ export async function savePlaylistToSpotify(tracks, { name, description = "", is
 	return created; // devolvemos para obtener el enlace a Spotify
 }
 
+export async function getUserPlaylists(limit = 20) {
+	const data = await spotifyRequest(`https://api.spotify.com/v1/me/playlists?limit=${limit}`);
+
+	// Devolvemos los datos más simplificados
+	return (data.items ?? []).map((pl) => ({
+		id: pl.id,
+		name: pl.name,
+		description: pl.description,
+		image: pl.images?.[0]?.url ?? null,
+		tracksTotal: pl.tracks?.total ?? 0,
+		owner: pl.owner?.display_name ?? "Desconocido",
+	}));
+}
+
+export async function getPlaylistTracks(playlistId, limit = 100) {
+	const data = await spotifyRequest(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=${limit}`);
+
+	// Los items vienen como { track: {...} }
+	const items = data.items ?? [];
+
+	return items.map((item) => item.track).filter(Boolean).map((track) => ({
+		id: track.id,
+		name: track.name,
+		artists: track.artists?.map((a) => a.name).join(", ") ?? "",
+		album: track.album?.name ?? "",
+		image: track.album?.images?.[0]?.url ?? null,
+		preview_url: track.preview_url ?? null,
+	}));
+}
+
 export async function spotifyRequest(url, options = {}) {
 	let token = await getAccessToken();
 

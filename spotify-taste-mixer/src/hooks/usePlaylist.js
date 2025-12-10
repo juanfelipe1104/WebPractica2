@@ -138,6 +138,11 @@ export function usePlaylist(preferences) {
         });
     };
 
+    const loadPlaylist = (tracks) => {
+        setPlaylist(tracks);
+    };
+
+
     return {
         playlist,
         favorites,
@@ -153,6 +158,7 @@ export function usePlaylist(preferences) {
         isInPlaylist,
         savePlaylistToSpotify,
         saving,
-        reorderTrackInPlaylist
+        reorderTrackInPlaylist,
+        loadPlaylist
     };
 }
